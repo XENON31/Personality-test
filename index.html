@@ -94,7 +94,7 @@
             margin-bottom: 20px;
         }
         .result {
-            text-align: center;
+            text-align: right;
             padding: 20px;
             background-color: #ecf0f1;
             border-radius: 5px;
@@ -105,6 +105,11 @@
             font-weight: bold;
             color: #2c3e50;
             margin: 10px 0;
+        }
+        .personality-title {
+            font-size: 20px;
+            color: #3498db;
+            margin-bottom: 15px;
         }
         .progress-bar {
             height: 10px;
@@ -121,22 +126,65 @@
         .hidden {
             display: none;
         }
+        .strengths-weaknesses {
+            display: flex;
+            margin: 15px 0;
+        }
+        .strengths, .weaknesses {
+            flex: 1;
+            padding: 10px;
+        }
+        .strengths {
+            border-right: 2px solid #ddd;
+        }
+        ul {
+            padding-right: 20px;
+            text-align: center;
+        }
+        .tab-container {
+            margin: 20px 0;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #3498db;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f0f0f0;
+            border-radius: 5px 5px 0 0;
+            margin-left: 5px;
+        }
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>اختبار تحليل الشخصية MBTI</h1>
-        <p><strong>إعداد: المدرب المعتمد/ ياسين سعيد علي<br>تصميم المتدرب/ عبدالعزيز رضوان عبدالعزيز</strong></p>
+        <h1 style="text-align: center;">اختبار تحليل الشخصية MBTI</h1>
+        <p><strong>إعداد: المدرب المعتمد/ باسين سعيد علي<br>تصميم: المتدرب/ عبدالعزيز رضوان عبدالعزيز</strong></p>
         
         <div id="intro">
             <div class="instructions">
                 <h2>إرشادات مهمة</h2>
                 <ul>
-                    <li>المدة المقترحة للاختبار: 20 دقيقة</li>
-                    <li>يتكون الاختبار من 4 أجزاء، كل جزء يتكون من قائمتين (أ، ب)، كل قائمة تحتوي على 15 عبارة</li>
-                    <li>ضع علامة (✓) أمام العبارة التي تعكس اعتقادك عن نفسك</li>
+                    <li>قم بإختيار حرف العبارة التي تعكس اعتقادك عن نفسك</li>
                     <li>كن صريحاً فيما تعتقده عن نفسك لتحقيق الدقة في تحديد نوع شخصيتك</li>
-                    <li>بعد الانتهاء من الاختبار، اجمع العلامات في كل قائمة على حدى، وضع المجموع في أسفل القائمة</li>
+                    
                 </ul>
             </div>
             <button id="start-test">بدء الاختبار</button>
@@ -161,13 +209,38 @@
         <div id="result-container" class="hidden result">
             <h2>نتيجة اختبار الشخصية</h2>
             <div class="personality-type" id="personality-type"></div>
+            <div class="personality-title" id="personality-title"></div>
             <div id="personality-description"></div>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="strengths">نقاط القوة</div>
+                    <div class="tab" data-tab="weaknesses">نقاط الضعف</div>
+                    <div class="tab" data-tab="careers">المهن المناسبة</div>
+                    <div class="tab" data-tab="relationships">العلاقات</div>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="strengths-tab">
+                        <ul id="personality-strengths"></ul>
+                    </div>
+                    <div class="tab-pane" id="weaknesses-tab">
+                        <ul id="personality-weaknesses"></ul>
+                    </div>
+                    <div class="tab-pane" id="careers-tab">
+                        <ul id="personality-careers"></ul>
+                    </div>
+                    <div class="tab-pane" id="relationships-tab">
+                        <div id="personality-relationships"></div>
+                    </div>
+                </div>
+            </div>
+            
             <button id="restart-btn">إعادة الاختبار</button>
         </div>
     </div>
 
     <script>
-        // بيانات الأسئلة مترجمة ومنظمة
+        // بيانات الأسئلة
         const questionsData = [
             // الجزء الأول
             [
@@ -218,7 +291,7 @@
                 { a: "أستمتع بالتحديات الفكرية والمنطقية", b: "أستمتع بالمشاعر الإنسانية والعلاقات" },
                 { a: "أهتم بالحقائق والمنطق عند تقييم الأشخاص", b: "أهتم بالمشاعر والقيم عند تقييم الأشخاص" },
                 { a: "أستمتع بتحليل الأفكار والنظريات", b: "أستمتع بمساعدة الآخرين وتفهم مشاعرهم" },
-                { a: "أفضل الوضوح والصراحة في العلاقات", b: "أفضل المرونة والتكيف في العلاقات" },
+                { a: "أفضل الوضوح والصراحة في العلاقات", b: "أفضل المرونة والتك適應 في العلاقات" },
                 { a: "أهتم بالعدالة والمساواة", b: "أهتم بالرحمة والتسامح" },
                 { a: "أستمتع بالمنافسة والتحدي", b: "أستمتع بالتعاون والانسجام" },
                 { a: "أفضل أن أكون صريحاً ومباشراً", b: "أفضل أن أكون لطيفاً ومتفهماً" }
@@ -243,6 +316,137 @@
             ]
         ];
 
+        const typeInfo = {
+            'ISTJ': {
+                title: 'المدقق - العملي المنظم',
+                description: 'يتميز ISTJ بالمسؤولية والواقعية والتنظيم. هم أشخاص عمليون، يعتمدون على الحقائق والتفاصيل، ويلتزمون باللوائح والقوانين. يفضلون العمل في بيئات منظمة ويكونون موثوقين للغاية في أداء واجباتهم.',
+                strengths: ['موثوقون وجديرون بالثقة', 'منظمون ودقيقون', 'عمليون وواقعيون', 'ملتزمون بالمسؤوليات'],
+                weaknesses: ['قد يكونون غير مرنين', 'مقاومون للتغيير', 'يميلون للتركيز على التفاصيل ويفوتون الصورة الكبيرة', 'قد يبدون صارمين أو قاسين'],
+                careers: ['محاسب', 'مدقق مالي', 'مسؤول نظم', 'مكتبي', 'ضابط عسكري', 'فني', 'مدير عمليات'],
+                relationships: 'ISTJ هم شركاء مخلصون وموثوقون، يظهرون حبهم من خلال الأفعال أكثر من الكلمات. يلتزمون بعلاقاتهم ويعملون بجد للحفاظ على استقرارها وأمانها.'
+            },
+            'ISFJ': {
+                title: 'الحامي - الحنون المدافع',
+                description: 'ISFJ هم أشخاص داعمون ومخلصون، يهتمون براحة الآخرين ويعملون بجد لتلبية احتياجات من حولهم. يتميزون بالدفء والتعاطف، ويهتمون بالحفاظ على التقاليد والقيم.',
+                strengths: ['مخلصون وموثوقون', 'متعاطفون ويهتمون بالآخرين', 'عمليون ومنظمون', 'مراقبون ودقيقون'],
+                weaknesses: ['يتجنبون الصراع', 'يميلون لانتقاد أنفسهم بقسوة', 'مقاومون للتغيير', 'قد يهملون احتياجاتهم الخاصة'],
+                careers: ['ممرض', 'معلم', 'أخصائي اجتماعي', 'مساعد إداري', 'أمين مكتبة', 'رعاية الأطفال', 'استشاري'],
+                relationships: 'ISFJ هم شركاء مخلصون ومتفانون، يسعون دائمًا لراحة شريكهم وسعادته. يهتمون بالتفاصيل الصغيرة التي تجعل العلاقة خاصة.'
+            },
+            'INFJ': {
+                title: 'المستشار - المثالي الخلاق',
+                description: 'INFJ هم أشخاص مثاليون وحدسيون، يسعون لجعل العالم مكاناً أفضل. يتميزون بعمق التفكير والإبداع، ويهتمون بالعلاقات العميقة والهادفة. لديهم قدرة على فهم مشاعر الآخرين وحل المشكلات المعقدة.',
+                strengths: ['مبدعون ومثاليون', 'يحبون التعمق في الأفكار', 'متفهمون لمشاعر الآخرين', 'ملتزمون بقيمهم'],
+                weaknesses: ['حساسون للنقد', 'يميلون للكمالية', 'يصعب عليهم ترك العلاقات السيئة', 'قد يهملون احتياجاتهم'],
+                careers: ['كاتب', 'استشاري', 'عالم نفس', 'أخصائي موارد بشرية', 'داعية', 'فنان', 'عامل اجتماعي'],
+                relationships: 'INFJ يبحثون عن علاقات عميقة وهادفة. هم شركاء مخلصون وحساسون، يسعون لفهم شريكهم على مستوى عميق ويدعمون نموه الشخصي.'
+            },
+            'INTJ': {
+                title: 'المخطط - الاستراتيجي المبتكر',
+                description: 'INTJ هم مفكرون استراتيجيون ومستقلون، يتمتعون برؤية مستقبلية وقدرة على التخطيط طويل المدى. يعتمدون على المنطق والعقلانية، ويسعون لتحقيق أهدافهم بطريقة منظمة ومبتكرة.',
+                strengths: ['مستقلون وواثقون', 'مفكرون استراتيجيون', 'مبدعون ومبتكرون', 'ملتزمون بأهدافهم'],
+                weaknesses: ['قد يبدون متعجرفين', 'غير صبورين مع عدم الكفاءة', 'يميلون للانعزال', 'يصعب عليهم التعبير عن المشاعر'],
+                careers: ['مهندس', 'عالم', 'مبرمج', 'مدير استراتيجي', 'قاضي', 'محلل نظم', 'باحث'],
+                relationships: 'INTJ يقدرون الاستقلالية والفكر المستقل في شركائهم. يبحثون عن علاقات تحفزهم فكرياً وتمكنهم من النمو مع شريكهم.'
+            },
+            'ISTP': {
+                title: 'الحرفي - المحلل العملي',
+                description: 'ISTP هم أشخاص عمليون ومرنون، يحبون استكشاف كيفية عمل الأشياء. يتميزون بالبراعة في حل المشكلات والعمل تحت الضغط، ويفضلون التعلم من خلال التجربة العملية.',
+                strengths: ['هادئون تحت الضغط', 'عمليون وواقعيون', 'مرنون ومتكيفون', 'ماهرون في حل المشكلات'],
+                weaknesses: ['متحفظون وعصاميون', 'يكرهون الالتزام', 'يمكن أن يكونوا متهورين', 'يميلون للمخاطرة'],
+                careers: ['مهندس ميكانيكي', 'طيار', 'مبرمج', 'خبير جرائم', 'فني', 'رياضي', 'سائق'],
+                relationships: 'ISTP يقدرون استقلاليتهم ويحتاجون إلى مساحة في العلاقات. هم شركاء عمليون يحلون المشاكل ببراعة ويجلبون الإثارة للعلاقة.'
+            },
+            'ISFP': {
+                title: 'الملحن - الفنان الحساس',
+                description: 'ISFP هم أشخاص فنيون وحساسون، يعيشون في اللحظة ويقدرون الجمال في كل شيء. يتميزون بالود والمرحلة، ويهتمون بتجارب الآخرين ومشاعرهم.',
+                strengths: ['مرنون ومتكيفون', 'حساسون ومتعاطفون', 'مبدعون وفنيون', 'يعيشون في اللحظة'],
+                weaknesses: ['يكرهون الصراع', 'يمكن أن يكونوا غير منظمين', 'حساسون للنقد', 'يميلون للتسويف'],
+                careers: ['فنان', 'موسيقي', 'مصمم', 'طبيب بيطري', 'أخصائي علاج طبيعي', 'عامل اجتماعي', 'مصور'],
+                relationships: 'ISFP هم شركاء حساسون ومتعاطفون، يجلبون الجمال والعفوية للعلاقة. يقدرون الأصالة ويبحثون عن شركاء يقدرون فرديتهم.'
+            },
+            'INFP': {
+                title: 'المثالي - الحالم المبدع',
+                description: 'INFP هم أشخاص مثاليون ومبدعون، يسعون للانسجام ويؤمنون بقيمهم الداخلية بعمق. يتميزون بالتعاطف والفضول الفكري، ويهتمون بمساعدة الآخرين وتحقيق مثاليةهم.',
+                strengths: ['متعاطفون ومتفهمون', 'مبدعون ومثاليون', 'شغوفون بقيمهم', 'مرنون ومتكيفون'],
+                weaknesses: ['مثاليون أكثر من اللازم', 'يكرهون الصراع', 'يمكن أن يكونوا غير عمليين', 'يميلون للقلق'],
+                careers: ['كاتب', 'شاعر', 'استشاري', 'أخصائي نفسي', 'عامل اجتماعي', 'مصمم جرافيك', 'مترجم'],
+                relationships: 'INFP يبحثون عن علاقات عميقة ومتوافقة مع قيمهم. هم شركاء مخلصون ومتفهمون، يسعون لخلق علاقة مليئة بالمعنى والغرض.'
+            },
+            'INTP': {
+                title: 'المفكر - العقلاني المنطقي',
+                description: 'INTP هم مفكرون تحليليون ومبدعون، يحبون النظريات المعقدة ويسعون لفهم الأنظمة. يتميزون بالاستقلالية والفضول الفكري، ويهتمون بالتحليل المنطقي للأفكار.',
+                strengths: ['مبدعون وأصليون', 'مفكرون تحليليون', 'مستقلون وفكريون', 'منفتحون على الأفكار الجديدة'],
+                weaknesses: ['يمكن أن يكونوا غير عمليين', 'يكرهون الروتين', 'يميلون للانعزال', 'يصعب عليهم اتخاذ القرارات'],
+                careers: ['عالم', 'فيلسوف', 'مبرمج', 'مهندس', 'أستاذ جامعي', 'محلل نظم', 'باحث'],
+                relationships: 'INTP يقدرون الاستقلال الفكري والمناقشات العميقة. هم شركاء مخلصون though قد يبدون منعزلين أحياناً، ويحتاجون إلى شركاء يفهمون حاجتهم للفضاء الفكري.'
+            },
+            'ESTP': {
+                title: 'المقنع - المغامر النشط',
+                description: 'ESTP هم أشخاص نشطون ومرنون، يحبون المخاطرة ويعيشون اللحظة بحيوية. يتميزون بالبراعة العملية والكاريزما، ويفضلون التعلم من خلال التجربة المباشرة.',
+                strengths: ['مرنون ومتكيفون', 'واقعيون وعمليون', 'يتمتعون بالكاريزما', 'ماهرون في حل المشكلات'],
+                weaknesses: ['يمكن أن يكونوا متهورين', 'يكرهون النظرية والتجريد', 'يميلون للمخاطرة', 'غير صبورين'],
+                careers: ['رجل أعمال', 'مسوق', 'ضابط شرطة', 'رياضي', 'ممثل', 'ميكانيكي', 'منظم فعاليات'],
+                relationships: 'ESTP يجلبون الإثارة والمرح للعلاقات. هم شركاء spontaneity ومغامرون، يحبون استكشاف أشياء جديدة مع شريكهم ويجعلون الحياة اليومية ممتعة.'
+            },
+            'ESFP': {
+                title: 'المؤدي - المتفائل المرح',
+                description: 'ESFP هم أشخاص spontaneity ومفعمة بالحيوية، يحبون المرح ويجلبون البهجة للآخرين. يتميزون بالمرحة والود، ويهتمون بتجارب الحياة الممتعة والمثيرة.',
+                strengths: ['مرحون ومتفائلون', 'عمليون وواقعيون', 'يتمتعون بالكاريزما', 'مرنون ومتكيفون'],
+                weaknesses: ['يكرهون التنظير', 'يمكن أن يكونوا غير منظمين', 'يميلون للتشتت', 'يحبون أن يكونوا في مركز الاهتمام'],
+                careers: ['ممثل', 'مسوق', 'منظم فعاليات', 'مدرب', 'أخصائي علاقات عامة', 'مرشد سياحي', 'بائع'],
+                relationships: 'ESFP هم شركاء مرحون ومتفائلون، يجلبون الطاقة الإيجابية للعلاقة. يقدرون المتعة والتلقائية ويسعون لجعل الحياة مع شريكهم مليئة بالمرح والمغامرات.'
+            },
+            'ENFP': {
+                title: 'البطل - المتحمس المبدع',
+                description: 'ENFP هم أشخاص متحمسون ومبدعون، يرون احتمالات في كل شيء ويحفزون الآخرين. يتميزون بالحماس والإبداع، ويهتمون بتطوير العلاقات واستكشاف الأفكار الجديدة.',
+                strengths: ['متحمسون ومبدعون', 'يتمتعون بالكاريزما', 'مرنون ومتكيفون', 'ماهرون في التواصل'],
+                weaknesses: ['يمكن أن يكونوا غير منظمين', 'يميلون للتسويف', 'يحبون أن يكونوا في مركز الاهتمام', 'يتجنبون الصراع'],
+                careers: ['كاتب', 'صحفي', 'مسوق', 'مستشار', 'مدرس', 'ممثل', 'رجل أعمال'],
+                relationships: 'ENFP هم شركاء متحمسون ومبدعون، يجلبون الطاقة والإلهام للعلاقة. يقدرون النمو الشخصي ويشجعون شريكهم على متابعة أحلامه.'
+            },
+            'ENTP': {
+                title: 'المبتكر - المفكر الذكي',
+                description: 'ENTP هم أشخاص ذكيون ومبتكرون، يحبون النقاش ويحفزون التغيير بالتحدي الفكري. يتميزون بالفضول والبراعة الذهنية، ويهتمون باستكشاف الاحتمالات وتحليل الأفكار.',
+                strengths: ['مبدعون وأصليون', 'مفكرون سريعون', 'يتمتعون بالكاريزما', 'مرنون ومتكيفون'],
+                weaknesses: ['يمكن أن يكونوا جدليين', 'يكرهون الروتين', 'يميلون للمقاطعة', 'غير صبورين'],
+                careers: ['رجل أعمال', 'محامي', 'مخترع', 'مسوق', 'مستشار', 'مهندس', 'صحفي'],
+                relationships: 'ENTP يقدرون الذكاء والفضول الفكري في شركائهم. هم شركاء محفزون intellectually، يحبون النقاشات العميقة ويشجعون شريكهم على النمو الفكري.'
+            },
+            'ESTJ': {
+                title: 'المدير - المنظم العملي',
+                description: 'ESTJ هم أشخاص عمليون ومنظمون، يحبون النظام ويعملون بجد لتحقيق الأهداف. يتميزون بالمسؤولية والواقعية، ويهتمون بإنفاذ القواعد والحفاظ على التقاليد.',
+                strengths: ['عمليون وواقعيون', 'منظمون وموثوقون', 'قادة طبيعيون', 'ملتزمون بالمسؤوليات'],
+                weaknesses: ['يمكن أن يكونوا غير مرنين', 'يميلون للسيطرة', 'يكرهون الفوضى', 'قد يبدون صارمين'],
+                careers: ['مدير', 'ضابط عسكري', 'محاسب', 'قاضي', 'معلم', 'مسؤول حكومي', 'مدير مشاريع'],
+                relationships: 'ESTJ هم شركاء مخلصون وموثوقون، يوفرون الاستقرار والأمان في العلاقة. يقدرون الالتزام والمسؤولية ويعملون بجد لبناء حياة مستقرة مع شريكهم.'
+            },
+            'ESFJ': {
+                title: 'مقدم الرعاية - الداعم الاجتماعي',
+                description: 'ESFJ هم أشخاص داعمون واجتماعيون، يحبون مساعدة الآخرين وخلق الانسجام. يتميزون بالود والمسؤولية، ويهتمون بإنشاء علاقات إيجابية والحفاظ على التقاليد.',
+                strengths: ['ودودون ومتعاطفون', 'منظمون وموثوقون', 'ماهرون في التواصل', 'يهتمون بالآخرين'],
+                weaknesses: ['حساسون للنقد', 'يكرهون الصراع', 'يميلون للتقليدية', 'يهتمون برأي الآخرين بشكل مفرط'],
+                careers: ['ممرض', 'معلم', 'أخصائي اجتماعي', 'مساعد إداري', 'منظم فعاليات', 'موظف استقبال', 'مدير موارد بشرية'],
+                relationships: 'ESFJ هم شركاء مخلصون وداعمون، يسعون لخلق انسجام في العلاقة. يقدرون التقاليد والعائلة ويعملون بجد لرعاية شريكهم وتلبية احتياجاته.'
+            },
+            'ENFJ': {
+                title: 'المعلم - الكاريزمي المحفز',
+                description: 'ENFJ هم أشخاص كاريزميون ومحفزون، يلهمون الآخرين ويعملون من أجل الصالح العام. يتميزون بالتعاطف والقيادة الطبيعية، ويهتمون بتنمية الآخرين وخلق التغيير الإيجابي.',
+                strengths: ['قادة طبيعيون', 'متعاطفون ومتفهمون', 'ماهرون في التواصل', 'ملتزمون بقيمهم'],
+                weaknesses: ['حساسون للنقد', 'يميلون للإرهاق', 'يهتمون برأي الآخرين بشكل مفرط', 'يتجنبون الصراع'],
+                careers: ['معلم', 'استشاري', 'داعية', 'مدرب', 'أخصائي موارد بشرية', 'عامل اجتماعي', 'قائد مجتمعي'],
+                relationships: 'ENFJ هم شركاء داعمون ومحفزون، يساعدون شريكهم على النمو وتحقيق إمكاناته. يقدرون التواصل العميق ويسعون لخلق علاقة متناغمة ومتوازنة.'
+            },
+            'ENTJ': {
+                title: 'القائد - الاستراتيجي الحاسم',
+                description: 'ENTJ هم أشخاص قياديون وحاسمون، استراتيجيون ويعملون بكفاءة لتحقيق الأهداف. يتميزون بالثقة والطموح، ويهتمون بالتخطيط طويل المدى وقيادة الآخرين.',
+                strengths: ['قادة طبيعيون', 'استراتيجيون وطموحون', 'واثقون وحاسمون', 'منظمون وفعالون'],
+                weaknesses: ['يمكن أن يكونوا متعجرفين', 'غير صبورين مع عدم الكفاءة', 'يميلون للسيطرة', 'يصعب عليهم التعامل مع المشاعر'],
+                careers: ['رئيس تنفيذي', 'محامي', 'مدير', 'مستشار إداري', 'قائد عسكري', 'رجل أعمال', 'محلل مالي'],
+                relationships: 'ENTJ هم شركاء طموحون وداعمون، يشجعون شريكهم على تحقيق أهدافه. يقدرون الذكاء والطموح ويسعون لبناء علاقة قوية قائمة على النمو المتبادل والنجاح.'
+            }
+        };
+
         const parts = ["الجزء الأول", "الجزء الثاني", "الجزء الثالث", "الجزء الرابع"];
         let currentPart = 0;
         let currentQuestion = 0;
@@ -258,7 +462,12 @@
         const progressElement = document.getElementById('progress');
         const resultContainer = document.getElementById('result-container');
         const personalityTypeElement = document.getElementById('personality-type');
+        const personalityTitleElement = document.getElementById('personality-title');
         const personalityDescriptionElement = document.getElementById('personality-description');
+        const personalityStrengthsElement = document.getElementById('personality-strengths');
+        const personalityWeaknessesElement = document.getElementById('personality-weaknesses');
+        const personalityCareersElement = document.getElementById('personality-careers');
+        const personalityRelationshipsElement = document.getElementById('personality-relationships');
         const restartBtn = document.getElementById('restart-btn');
         const startTestBtn = document.getElementById('start-test');
 
@@ -267,6 +476,22 @@
         nextBtn.addEventListener('click', showNextQuestion);
         submitBtn.addEventListener('click', calculateResult);
         restartBtn.addEventListener('click', restartTest);
+
+        // إضافة event listeners للتبويبات
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // إزالة النشاط من جميع التبويبات
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // إضافة النشاط للتبويب المحدد
+                tab.classList.add('active');
+                
+                // إخفاء جميع محتويات التبويبات
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                // إظهار المحتوى المناسب
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
 
         function startTest() {
             introElement.classList.add('hidden');
@@ -285,7 +510,7 @@
             const questionElement = document.createElement('div');
             questionElement.className = 'question-container';
             questionElement.innerHTML = `
-                <div class="question">${questionNumber}. ${questionData.a}. ${questionData.b}</div>
+                <div class="question">${questionNumber}.<br>أ. ${questionData.a}.<br>ب. ${questionData.b}.</div>
                 <div class="options">
                     <div class="option ${answers[currentPart][currentQuestion] === 'a' ? 'selected' : ''}" data-value="a">أ</div>
                     <div class="option ${answers[currentPart][currentQuestion] === 'b' ? 'selected' : ''}" data-value="b">ب</div>
@@ -392,29 +617,38 @@
             testContainer.classList.add('hidden');
             resultContainer.classList.remove('hidden');
             
+            const typeData = typeInfo[type];
+            
             personalityTypeElement.textContent = `نوع شخصيتك هو: ${type}`;
+            personalityTitleElement.textContent = typeData.title;
+            personalityDescriptionElement.textContent = typeData.description;
             
-            // إضافة وصف مختصر لأنواع الشخصية
-            const typeDescriptions = {
-                'ISTJ': 'شخصية منظمة وواقعية، تلتزم بالمسؤوليات وتقدس الحقائق.',
-                'ISFJ': 'شخصية داعمة ومخلصة، تهتم باحتياجات الآخرين وتحافظ على التقاليد.',
-                'INFJ': 'شخصية مثالية وحدسية، تسعى لجعل العالم مكاناً أفضل وتحب العمق في العلاقات.',
-                'INTJ': 'شخصية استراتيجية ومبدعة، تتمتع برؤية مستقبلية وتحب التخطيط طويل المدى.',
-                'ISTP': 'شخصية عملية ومرنة، تحب استكشاف كيفية عمل الأشياء وتحل المشاكل ببراعة.',
-                'ISFP': 'شخصية فنية وحساسة، تعيش اللحظة وتقدر الجمال في كل شيء.',
-                'INFP': 'شخصية مثالية ومبدعة، تسعى للانسجام وتؤمن بقيمها الداخلية بعمق.',
-                'INTP': 'شخصية تحليلية ومبدعة، تحب النظريات المعقدة وتسعى لفهم الأنظمة.',
-                'ESTP': 'شخصية نشطة ومرحة، تحب المخاطرة وتعيش اللحظة بحيوية.',
-                'ESFP': 'شخصية spontaneity ومفعمة بالحيوية، تحب المرح وتجلب البهجة للآخرين.',
-                'ENFP': 'شخصية متحمسة ومبدعة، ترى احتمالات في كل شيء وتحفز الآخرين.',
-                'ENTP': 'شخصية ذكية ومبتكرة، تحب النقاش وتحفز التغيير بالتحدي الفكري.',
-                'ESTJ': 'شخصية عملية ومنظمة، تحب النظام وتعمل بجد لتحقيق الأهداف.',
-                'ESFJ': 'شخصية داعمة واجتماعية، تحب مساعدة الآخرين وخلق الانسجام.',
-                'ENFJ': 'شخصية كاريزمية ومحفزة، تلهم الآخرين وتعمل من أجل الصالح العام.',
-                'ENTJ': 'شخصية قيادية وحاسمة، تستراتيجية وتعمل بكفاءة لتحقيق الأهداف.'
-            };
+            // عرض نقاط القوة
+            personalityStrengthsElement.innerHTML = '';
+            typeData.strengths.forEach(strength => {
+                const li = document.createElement('li');
+                li.textContent = strength;
+                personalityStrengthsElement.appendChild(li);
+            });
             
-            personalityDescriptionElement.textContent = typeDescriptions[type] || 'نوع الشخصية غير معروف';
+            // عرض نقاط الضعف
+            personalityWeaknessesElement.innerHTML = '';
+            typeData.weaknesses.forEach(weakness => {
+                const li = document.createElement('li');
+                li.textContent = weakness;
+                personalityWeaknessesElement.appendChild(li);
+            });
+            
+            // عرض المهن المناسبة
+            personalityCareersElement.innerHTML = '';
+            typeData.careers.forEach(career => {
+                const li = document.createElement('li');
+                li.textContent = career;
+                personalityCareersElement.appendChild(li);
+            });
+            
+            // عرض العلاقات
+            personalityRelationshipsElement.textContent = typeData.relationships;
         }
 
         function restartTest() {
